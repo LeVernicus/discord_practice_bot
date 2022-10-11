@@ -3,7 +3,7 @@ const { Client, GatewayIntentBits, Routes } = require('discord.js');
 const { REST } = require('@discordjs/rest');
 const { token, clientId, guildId } = require('./config.json');
 const rest = new REST({ version: '10' }).setToken(token);
-const maps = require('./newmaps.json');
+const maps = require('./maps.json');
 
 // Create a new client instance
 const client = new Client({
