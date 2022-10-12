@@ -31,7 +31,6 @@ client.on('interactionCreate', (interaction) => {
 		const roll = randomInt(0, maps.length);
 		interaction.reply({ content: maps[roll].internalName });
 	}
-	/* this is some diff comment i've added */
 /* 	else {
 		let maps_filter = [null];
 		for (let i = 0; i < maps.length; i++) {
