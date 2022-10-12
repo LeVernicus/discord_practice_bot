@@ -1,10 +1,10 @@
 // Require the necessary discord.js classes
-const { Client, GatewayIntentBits, Routes } = require('discord.js');
+const { Client, GatewayIntentBits,  Routes } = require('discord.js');
 const { REST } = require('@discordjs/rest');
-const { token, clientId, guildId } = require('./config.json');
+const { token, clientId, guildId } = require('dotenv').config();
 const rest = new REST({ version: '10' }).setToken(token);
 const maps = require('./maps.json');
-
+console.log('token');
 // Create a new client instance
 const client = new Client({
 	intents: [
@@ -18,7 +18,6 @@ function randomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-
 // When the client is ready, run this code (only once)
 client.once('ready', () => console.log(`${client.user.tag} is ready!`));
 
@@ -31,6 +30,7 @@ client.on('interactionCreate', (interaction) => {
 		const roll = randomInt(0, maps.length);
 		interaction.reply({ content: maps[roll].internalName });
 	}
+});
 /* 	else {
 		let maps_filter = [null];
 		for (let i = 0; i < maps.length; i++) {
@@ -44,7 +44,6 @@ client.on('interactionCreate', (interaction) => {
 		const roll = randomInt(0, maps_filter.length);
 		interaction.reply({ content: maps_filter[roll].internalName });
 	} */
-});
 
 async function main() {
 	const commands = [
