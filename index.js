@@ -16,6 +16,7 @@ const client = new Client({
 function randomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
 function mapFilter(mode, maps) {
 	let mapsFiltered = {
 		"mapName": "",
@@ -34,9 +35,9 @@ function mapFilter(mode, maps) {
 	};
 	for (let i=0; i<maps.length; i++) {
 		let j = 0;
-		if (maps[i].mode === true) {
+		if (maps[i].competitive) {
 			mapsFiltered[j] = maps[i];
-			j++
+			j++;
 		}
 	}
 	return mapsFiltered;
@@ -51,8 +52,17 @@ client.on('interactionCreate', (interaction) => {
 		interaction.reply({ content: interaction.member.nickname + ' rolled the number ' + roll.toString() + '.' + ' (' + interaction.options.getInteger('minval') + '-' + interaction.options.getInteger('maxval') + ')' });
 	}
 	if (interaction.commandName === 'randommap') {
-		mapsFiltered = mapFilter('competitive', maps);
-		console.log(mapsFiltered)
+		// mapsFiltered = mapFilter('competitive', maps);
+		for (let i in maps) {
+			let j = [];
+			if (maps[i].competitive) {
+				console.log(maps[i].internalName);
+				j.push(i);
+			}
+		}
+		console.log(j)
+
+		// console.log(typeof maps[0]);
 		// if (interaction.options["_hoistedOptions"][0] !== undefined) {
 		// 	console.log("Mode works.");
 		// 	if ()
