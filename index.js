@@ -17,83 +17,46 @@ function randomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-function mapFilter(mode, maps) {
-	let mapsFiltered = {
-		"mapName": "",
-        "internalName": "",
-        "firstAdded": "",
-        "lastUpdated": "",
-        "competitive": false,
-        "wingman": false,
-        "casual": false,
-        "deathmatch": false,
-        "armsRace": false,
-        "flyingScoutsman": false,
-        "retakes": false,
-        "author": "",
-        "comments": ""
-	};
-	for (let i=0; i<maps.length; i++) {
-		let j = 0;
-		if (maps[i].competitive) {
-			mapsFiltered[j] = maps[i];
-			j++;
-		}
-	}
-	return mapsFiltered;
-}
-
-// When the client is ready, run this code (only once)
+// When the client is ready, run this code (only once) telling the console the bot is ready
 client.once('ready', () => console.log(`${client.user.tag} is ready!`));
 
 client.on('interactionCreate', (interaction) => {
 	if (interaction.commandName === 'roll') {
+		// roll a number between the user provided minval, and user provided maxval, then return the result
 		const roll = randomInt(interaction.options.getInteger('minval'), interaction.options.getInteger('maxval'));
 		interaction.reply({ content: interaction.member.nickname + ' rolled the number ' + roll.toString() + '.' + ' (' + interaction.options.getInteger('minval') + '-' + interaction.options.getInteger('maxval') + ')' });
 	}
-	if (interaction.commandName === 'randommap') {
-		// mapsFiltered = mapFilter('competitive', maps);
+	if (interaction.commandName === 'randommap' && interaction.options["_hoistedOptions"][0] === undefined) {
+		let j = [];
+		// iterate (i) through maps, if map competitive === true, then push map to new array (j) 
 		for (let i in maps) {
-			let j = [];
 			if (maps[i].competitive) {
-				console.log(maps[i].internalName);
 				j.push(i);
 			}
 		}
-		console.log(j)
-
-		// console.log(typeof maps[0]);
-		// if (interaction.options["_hoistedOptions"][0] !== undefined) {
-		// 	console.log("Mode works.");
-		// 	if ()
-		// }
-		// const roll = randomInt(0, maps.length)
-		// if (interaction.options["_hoistedOptions"][0] === null) {
-		// 	console.log('Options is null!');
-		// }
-		// if (interaction.options["_hoistedOptions"][0] === undefined) {
-		// 	console.log('Options is undefined!');
-		// }
-		// console.log(interaction.options["_hoistedOptions"][0].value);
-		// console.log(roll.toString())
-		// console.log(typeof roll)
-		// console.log(maps[0].internalName);
-		// interaction.reply({ content: maps[roll].internalName });
+		// once j is defined of only maps where competitive === true, roll a number randomInt() and assign the return array value to the roll
+		const roll = j[randomInt(0, j.length)];
+		// the new mapRoll is the value of the array element of the roll, which determines the map
+		const mapRoll = maps[roll];
+		interaction.reply({ content: mapRoll.internalName });
+	} else {
+		if (interaction.commandName === 'randommap' && interaction.options["_hoistedOptions"][0] === 'wingman') {
+			console.log('its wingman')
+			let j = [];
+			// iterate (i) through maps, if map wingman === true, then push map to new array (j) 
+			for (let i in maps) {
+				if (maps[i].wingman) {
+					j.push(i);
+				}
+			}
+			// once j is defined of only maps where wingman === true, roll a number randomInt() and assign the return array value to the roll
+			const roll = j[randomInt(0, j.length)];
+			// the new mapRoll is the value of the array element of the roll, which determines the map
+			const mapRoll = maps[roll];
+			interaction.reply({ content: mapRoll.internalName });	
+		}
 	}
 });
- 	// else {
-	// 	let maps_filter = [null];
-	// 	for (let i = 0; i < maps.length; i++) {
-	// 		if (maps[i].competitive) {
-	// 			console.log(maps[i]);
-	// 			console.log(maps[i].internalName);
-	// 			console.log(maps[i].competitive);
-	// 			maps_filter += maps[i];
-	// 		}
-	// 	}
-	// 	const roll = randomInt(0, maps_filter.length);
-	// 	interaction.reply({ content: maps_filter[roll].internalName });
-	// }
 	
 async function main() {
 	const commands = [
@@ -125,10 +88,6 @@ async function main() {
 					type: 3,
 					required: false,
 					choices: [
-						{
-							name: 'Competitive',
-							value: 'competitive',
-						},
 						{
 							name: 'Wingman',
 							value: 'wingman',
