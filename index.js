@@ -17,44 +17,75 @@ function randomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
+function rollFilteredMap(mode) {
+	let j = [];
+	// iterate (i) through maps, if map mode === true, then push map to new array (j) 
+	for (let i in maps) {
+		if (maps[i][mode]) {
+			j.push(i);
+		}
+	}
+	// once j is defined of only maps where mode === true, roll a number randomInt() and assign the return array value to the roll
+	const length = j.length;
+	const roll = j[randomInt(0, length)];
+	// the new mapRoll is the value of the array element of the roll, which determines the map
+	return roll;
+	// interaction.reply({ content: mapRoll.internalName });
+}
+
+function randomMapReply(select) {
+	roll = rollFilteredMap(select);
+	try{
+		contentReply = maps[roll].internalName
+		return contentReply;
+	}
+	catch (err) {
+		console.log(err);
+	}
+}
+
 // When the client is ready, run this code (only once) telling the console the bot is ready
 client.once('ready', () => console.log(`${client.user.tag} is ready!`));
 
 client.on('interactionCreate', (interaction) => {
+	const boolOption = Boolean(interaction.options["_hoistedOptions"][0] != null);
 	if (interaction.commandName === 'roll') {
 		// roll a number between the user provided minval, and user provided maxval, then return the result
 		const roll = randomInt(interaction.options.getInteger('minval'), interaction.options.getInteger('maxval'));
 		interaction.reply({ content: interaction.member.nickname + ' rolled the number ' + roll.toString() + '.' + ' (' + interaction.options.getInteger('minval') + '-' + interaction.options.getInteger('maxval') + ')' });
 	}
-	if (interaction.commandName === 'randommap' && interaction.options["_hoistedOptions"][0] === undefined) {
-		let j = [];
-		// iterate (i) through maps, if map competitive === true, then push map to new array (j) 
-		for (let i in maps) {
-			if (maps[i].competitive) {
-				j.push(i);
-			}
+	else if (interaction.commandName === 'randommap' && boolOption === false) {
+		interaction.reply({ content: randomMapReply('ranked')})
+	}
+	else if (interaction.commandName === 'randommap' && boolOption === true) {
+		option1 = interaction.options["_hoistedOptions"][0].value;
+		if (interaction.commandName === 'randommap' && option1 === 'armsRace') {
+			interaction.reply({ content: randomMapReply(option1) });
 		}
-		// once j is defined of only maps where competitive === true, roll a number randomInt() and assign the return array value to the roll
-		const roll = j[randomInt(0, j.length)];
-		// the new mapRoll is the value of the array element of the roll, which determines the map
-		const mapRoll = maps[roll];
-		interaction.reply({ content: mapRoll.internalName });
-	} else {
-		if (interaction.commandName === 'randommap' && interaction.options["_hoistedOptions"][0] === 'wingman') {
-			console.log('its wingman')
-			let j = [];
-			// iterate (i) through maps, if map wingman === true, then push map to new array (j) 
-			for (let i in maps) {
-				if (maps[i].wingman) {
-					j.push(i);
-				}
-			}
-			// once j is defined of only maps where wingman === true, roll a number randomInt() and assign the return array value to the roll
-			const roll = j[randomInt(0, j.length)];
-			// the new mapRoll is the value of the array element of the roll, which determines the map
-			const mapRoll = maps[roll];
-			interaction.reply({ content: mapRoll.internalName });	
+		else if (interaction.commandName === 'randommap' && option1 === 'casual') {
+			interaction.reply({ content: randomMapReply(option1) });
 		}
+		else if (interaction.commandName === 'randommap' && option1 === 'competitive') {
+			interaction.reply({ content: randomMapReply(option1) });
+		}
+		else if (interaction.commandName === 'randommap' && option1 === 'deathmatch') {
+			interaction.reply({ content: randomMapReply(option1) });
+		}
+		else if (interaction.commandName === 'randommap' && option1 === 'flyingScoutsman') {
+			interaction.reply({ content: randomMapReply(option1) });
+		}
+		else if (interaction.commandName === 'randommap' && option1 === 'retakes') {
+			interaction.reply({ content: randomMapReply(option1) });
+		}
+		else if (interaction.commandName === 'randommap' && option1 === 'wingman') {
+			interaction.reply({ content: randomMapReply(option1) });
+		}
+		else {
+			interaction.reply({ content: 'A slash command error occurred!' });
+		}
+	}
+	else {
+		interaction.reply({ content: 'A slash command error occurred!' });
 	}
 });
 	
@@ -97,12 +128,16 @@ async function main() {
 							value: 'casual',
 						},
 						{
+							name: 'Competitive',
+							value: 'competitive',
+						},
+						{
 							name: 'Deathmatch',
 							value: 'deathmatch',
 						},
 						{
 							name: 'Armsrace',
-							value: 'armsrace',
+							value: 'armsRace',
 						},
 						{
 							name: 'Flying Scoutsman',
