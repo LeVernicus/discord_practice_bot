@@ -4,6 +4,7 @@ const { REST } = require('@discordjs/rest');
 require('dotenv').config();
 const rest = new REST({ version: '10' }).setToken(process.env.token);
 const maps = require('./maps.json');
+const botlines = require ('.botlines.json');
 // Create a new client instance
 const client = new Client({
 	intents: [
@@ -13,8 +14,63 @@ const client = new Client({
 	],
 });
 
+// let rarity be one of 4 values
+// uncommon, rare, epic, legendary
+// uncommon 60, rare 25, epic 10, legendary 5
+// uncommon 27/50
+// rare 13/50
+// epic 8/50
+// legendary 2/50
+function getBotLineRarity() {
+	let rarity = '';
+	const numerator = randomInt(1, 50);
+	const ratio = numerator / 50;
+	const percent = ratio * 100;
+	if (percent <= 100 && percent > 46 ) {
+		rarity = 'uncommon';
+	}
+	else if (percent <= 46 && percent > 20 ) {
+		rarity = 'rare';
+	}
+	else if (percent <= 20 && percent > 4) {
+		rarity = 'epic';
+	}
+	else if (percent <= 4) {
+		rarity = 'legendary'
+	}
+	else {
+		rarity = 'error'
+	}
+	return rarity;
+}
+
+function getRandomBotLine(context, result) {
+	const rarity = getBotLineRarity();
+	let j = [];
+	for (let i in botlines) {
+		if (botlines[i][rarity] && botlines[i][context] && botlines[i][result]) {
+			j.push(i);
+		}
+	}
+	const length = j.length;
+	const roll = j[randomInt(0, length)];
+	return roll;
+}
+
 function randomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+
+function randomMapReply(select) {
+	roll = rollFilteredMap(select);
+	try{
+		mapReply = maps[roll].internalName;
+		return mapReply;
+	}
+	catch (err) {
+		console.log(err);
+	}
 }
 
 function rollFilteredMap(mode) {
@@ -33,16 +89,6 @@ function rollFilteredMap(mode) {
 	// interaction.reply({ content: mapRoll.internalName });
 }
 
-function randomMapReply(select) {
-	roll = rollFilteredMap(select);
-	try{
-		contentReply = maps[roll].internalName
-		return contentReply;
-	}
-	catch (err) {
-		console.log(err);
-	}
-}
 
 // When the client is ready, run this code (only once) telling the console the bot is ready
 client.once('ready', () => console.log(`${client.user.tag} is ready!`));
@@ -52,6 +98,7 @@ client.on('interactionCreate', (interaction) => {
 	if (interaction.commandName === 'roll') {
 		// roll a number between the user provided minval, and user provided maxval, then return the result
 		const roll = randomInt(interaction.options.getInteger('minval'), interaction.options.getInteger('maxval'));
+		// const botLine = getRandomBotLine('roll',roll);
 		interaction.reply({ content: interaction.member.nickname + ' rolled the number ' + roll.toString() + '.' + ' (' + interaction.options.getInteger('minval') + '-' + interaction.options.getInteger('maxval') + ')' });
 	}
 	else if (interaction.commandName === 'randommap' && boolOption === false) {
@@ -83,6 +130,9 @@ client.on('interactionCreate', (interaction) => {
 		else {
 			interaction.reply({ content: 'A slash command error occurred!' });
 		}
+	}
+	else if {
+
 	}
 	else {
 		interaction.reply({ content: 'A slash command error occurred!' });
@@ -151,6 +201,10 @@ async function main() {
 				},
 			],
 		},
+		{
+			name: 'randomteams',
+			description: 'random ct/t teams based on voicechat participants'
+		}
 	];
 	try {
 		console.log('Started refreshing application (/) commands.');
