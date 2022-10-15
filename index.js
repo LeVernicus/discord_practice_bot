@@ -152,21 +152,4 @@ client.on('interactionCreate', async interaction => {
 	}
 });
 	
-async function main() {
-	try {
-		console.log('Started refreshing application (/) commands.');
-		await rest.put(Routes.applicationGuildCommands(process.env.clientId, process.env.guildId), {
-			body: commands,
-		});
-		// client.login(token)
-	}
-	catch (err) {
-		console.log(err);
-	}
-}
-
-main();
-
-// Login to Discord with your client's token
-
 client.login(process.env.token);
