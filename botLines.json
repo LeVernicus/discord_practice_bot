@@ -1,0 +1,85 @@
+[
+    {
+        "context": "textChat",
+        "botLine": "Khajiit has wares, if you have coin."
+    },
+    {
+        "context": "textChat",
+        "botLine": "I can has cheezburger?"
+    },
+    {
+        "context": "textChat",
+        "botLine": "Holy shit, it's another fuckin' day -- it's the best day ever again!!"
+    },
+    {
+        "context": "textChat",
+        "botLine": "Can I get uhhh... chicken sammich and butt scratch??"
+    },
+    {
+        "context": "randommap",
+        "botLine": "MY RAGE!!:"
+    },
+    {
+        "context": "randommap",
+        "botLine": "Meowaaage!"
+    },
+    {
+        "context": "randommap",
+        "botLine": "As good as Nuketown in cod?"
+    },
+    {
+        "context": "randommap",
+        "botLine": "I'd Overpass your ma if you know what I mean."
+    },
+    {
+        "context": "randommap",
+        "botLine": "Inferno. Noun. A place or condition suggestive of hell, especially with respect to human suffering or death."
+    },
+    {
+        "context": "randommap",
+        "botLine": "Better than nuketown"
+    },
+    {
+        "context": "roll",
+        "botLine": "Critical!! nat 20:"
+    },
+    {
+        "context": "roll",
+        "botLine": "Thou art gifted."
+    },
+    {
+        "context": "roll",
+        "botLine": "Wow, good one -- Hilarious even."
+    },
+    {
+        "context": "roll",
+        "botLine": "You have rolled... poorly."
+    },
+    {
+        "context": "roll",
+        "botLine": "W0w 3p1c g4m3r m0m3nt!!"
+    },    {
+        "context": "roll",
+        "botLine": "Nice."
+    },
+    {
+        "context": "roll",
+        "botLine": "Snoop would be proud."
+    },
+    {
+        "context": "roll",
+        "botLine": "Mmm... seven, are you a mystic?"
+    },
+    {
+        "context": "roll",
+        "botLine": "1 in 137 is one of the greatest mysteries in physics."
+    },
+    {
+        "context": "roll",
+        "botLine": "One too many, or too few?"
+    },
+    {
+        "context": "roll",
+        "botLine": ""
+    }
+]

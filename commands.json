@@ -1,0 +1,66 @@
+[
+    {
+        "name": "roll",
+        "description": "Roll a number between two minmax values",
+        "options": [
+            {
+                "name": "minval",
+                "description": "Minimum value roll",
+                "type": 4,
+                "required": true
+            },
+            {
+                "name": "maxval",
+                "description": "Maximum value roll",
+                "type": 4,
+                "required": true
+            }
+        ]
+    },
+    {
+        "name": "randommap",
+        "description": "Random a CSGO map, given a game mode, (default competitive)",
+        "options": [
+            {
+                "name": "mode",
+                "description": "Gameplay mode",
+                "type": 3,
+                "required": false,
+                "choices": [
+                    {
+                        "name": "Wingman",
+                        "value": "wingman"
+                    },
+                    {
+                        "name": "Casual",
+                        "value": "casual"
+                    },
+                    {
+                        "name": "Competitive",
+                        "value": "competitive"
+                    },
+                    {
+                        "name": "Deathmatch",
+                        "value": "deathmatch"
+                    },
+                    {
+                        "name": "Armsrace",
+                        "value": "armsRace"
+                    },
+                    {
+                        "name": "Flying Scoutsman",
+                        "value": "flyingScoutsman"
+                    },
+                    {
+                        "name": "Retakes",
+                        "value": "retakes"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "name": "randomteams",
+        "description": "random ct/t teams based on voicechat participants"
+    }
+]
