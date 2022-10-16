@@ -64,6 +64,21 @@ const client = new Client({
 // 	const roll = j[randomInt(0, length)];
 // 	return roll;
 // }
+function shuffle(array) {
+	let currentIndex = array.length,  randomIndex;
+	// While there remain elements to shuffle.
+	while (currentIndex != 0) {
+  
+	  // Pick a remaining element.
+	  randomIndex = Math.floor(Math.random() * currentIndex);
+	  currentIndex--;
+  
+	  // And swap it with the current element.
+	  [array[currentIndex], array[randomIndex]] = [
+		array[randomIndex], array[currentIndex]];
+	}
+	return array;
+}
 
 function randomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
@@ -82,9 +97,49 @@ function randomMapReply(select) {
 }
 
 function randomTeams(randomTeamsInteraction) {
-	let channel = randomTeamsInteraction.member.voice.channel;
-	console.log(channel.members);
-	return
+	// let channelId = randomTeamsInteraction.member.voice.channel.id;
+	// let channel = randomTeamsInteraction.guild.channels.cache.get('1030907869677232271');
+	// console.log(channelId);
+	const channelFrom = randomTeamsInteraction.guild.channels.cache.get('338773390024245248');
+	const channelTo = randomTeamsInteraction.guild.channels.cache.get('1031283137675800586');
+	if (!randomTeamsInteraction.member.permissions.has('MOVE_MEMBERS')) return
+	let bowl= [];
+	let ct = [];
+	let t = [];
+	for (let guildMember of channelFrom.members.values()) {
+		bowl.push(guildMember.user.id);
+	}
+	let originalBowlSize = bowl.length;
+	console.log(bowl);
+	bowl = shuffle(bowl);
+	console.log(bowl)
+	console.log(originalBowlSize);
+	console.log(originalBowlSize % 2)
+	if ((originalBowlSize % 2) != 0) {
+		let oddLength = ((originalBowlSize / 2) + 0.5);
+		console.log(oddLength);
+		for (i = 0; i < oddLength; i++){
+			t.push(bowl[i]);
+			bowl.shift();
+		}
+		ct = bowl;
+		console.log('Terrorists:')
+		console.log(t);
+		console.log('Counter-Terrorists')
+		console.log(ct);
+	}
+	if ((originalBowlSize % 2) == 0) {
+		let evenLength = (originalBowlSize / 2);
+		for (i = 0; i < evenLength; i++){
+			t.push(bowl[i]);
+			bowl.shift();
+		}
+		ct = bowl;
+		console.log('Terrorists:')
+		console.log(t);
+		console.log('Counter-Terrorists')
+		console.log(ct);
+	}
 }
 
 function rollFilteredMap(mode) {
@@ -119,8 +174,11 @@ client.on('interactionCreate', async interaction => {
 	if (!(Boolean(interaction.options["_hoistedOptions"][0]))) {
 		console.log('options is false')
 	}
-	if (interaction.commandName === 'roll') {
+	if (interaction.commandName === 'roll' && interaction.options.getInteger('minval') !== 0) {
 		await interaction.reply({ content: rollReply(interaction) });
+	}
+	if (interaction.options.getInteger('minval') === 0) {
+		await interaction.reply({ content: 'minval cannot be zero, snitch. Stop trying to break the bot! :rage:'})
 	}
 	if (interaction.commandName === 'randomteams') {
 		randomTeams(interaction);

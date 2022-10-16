@@ -5,13 +5,13 @@
         "options": [
             {
                 "name": "minval",
-                "description": "Minimum value roll",
+                "description": "Minimum value roll (cannot be zero)",
                 "type": 4,
                 "required": true
             },
             {
                 "name": "maxval",
-                "description": "Maximum value roll",
+                "description": "Maximum value roll (max 2^53)",
                 "type": 4,
                 "required": true
             }
