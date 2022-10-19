@@ -207,6 +207,9 @@ function rollReply(rollInteraction) {
 // When the client is ready, run this code (only once) telling the console the bot is ready
 client.once('ready', () => console.log(`${client.user.tag} is ready!`));
 
+let randomTNames = [];
+let randomCTNames = [];
+
 client.on('interactionCreate', async interaction => {
 	console.log(interaction.member.voice.channel.members instanceof Map);
 	if (Boolean(interaction.options["_hoistedOptions"][0])) {
@@ -230,15 +233,15 @@ client.on('interactionCreate', async interaction => {
 		console.log('bowlsize is '+bowl.length);
 		const assignments = getRandomTeamAssignments(bowl);
 		console.log('bowlsize is '+bowl.length);
-		const randomTNames = getRandomTNames(bowl, assignments);
-		const randomCTNames = getRandomCTNames(bowl, assignments);
+		randomTNames = getRandomTNames(bowl, assignments);
+		randomCTNames = getRandomCTNames(bowl, assignments);
 		randomTreply = randomTNames.map(username => {
-			return blockQuote(username+' is T side. \r\n')
-		})
+			return username+' is T side. \r\n';
+		});
 		randomCTreply = randomCTNames.map(username => {
 			return username+' is CT side.\r\n'
 		})
-		await interaction.reply({ content: randomTreply+' and '+randomCTreply });
+		await interaction.reply({ content: blockQuote(randomTreply+' and '+randomCTreply) });
 	}
 	if (interaction.commandName === 'randommap') {
 		await interaction.reply({ content: randomMapReply('ranked')})
