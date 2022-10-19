@@ -86,30 +86,23 @@ function randomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-
+// call a filtered map and return its internalName
 function randomMapReply(select) {
 	roll = rollFilteredMap(select);
 	try{
 		mapReply = maps[roll].internalName;
-		return mapReply;
+		return bold(blockQuote('*suggests '+mapReply+'*'));
 	}
 	catch (err) {
 		console.log(err);
 	}
 }
 
-function randomTeams(randomTeamsInteraction) {
-	// let channelId = randomTeamsInteraction.member.voice.channel.id;
-	// let channel = randomTeamsInteraction.guild.channels.cache.get('1030907869677232271');
-	// console.log(channelId);
-	const channelFrom = randomTeamsInteraction.guild.channels.cache.get('493932332902907914');
-	// const channelTo = randomTeamsInteraction.member.channels.cache.get('1031283137675800586');
+function randomTeams(randomTeamsInteraction, channelId) {
+	const channelFrom = randomTeamsInteraction.member.channels.cache.get(channelId);
 	if (!randomTeamsInteraction.member.permissions.has('MOVE_MEMBERS')) return
 	let bowl = [];
-	let ct = [];
-	let t = [];
 	for (let guildMember of channelFrom.members.values()) {
-		// bowl.push(guildMember.user.id);
 		bowl.push(guildMember);
 	}
 	bowl = shuffle(bowl);
@@ -120,6 +113,8 @@ function randomTeams(randomTeamsInteraction) {
 function getRandomTeamAssignments(bowl){
 	originalBowlSize = bowl.length;
 	let assignments = [];
+	// Generate assignment objects based on size (bowl) of the channel participants
+	// If voicechannel size is not an even number of participants return extra player on T side
 	if ((originalBowlSize % 2) != 0) {
 		let oddLength = ((originalBowlSize / 2) + 0.5);
 		console.log('oddLength is true');
@@ -136,6 +131,7 @@ function getRandomTeamAssignments(bowl){
 			})
 		}
 	}
+	// If voicechannel is even size then assign even number of participants to ctside or tside
 	if ((originalBowlSize % 2) == 0) {
 		let evenLength = (originalBowlSize / 2);
 		console.log('evenlength is true');
@@ -155,26 +151,26 @@ function getRandomTeamAssignments(bowl){
 	console.log(assignments);
 	return assignments;
 }
-
+// return the array of names for Tside based on the original array from voicechat (bowl)
 function getRandomTNames(bowl, assignments){
 	let Tnames = [];
 	console.log(bowl+'is bowl')
 	for (i = 0; i<bowl.length; i++) {
 		if(assignments[i].tside) {
-			console.log(bowl[i].user.username+' is T side.');
+			console.log(bowl[i].user.username+' is T.');
 			Tnames[i] = bowl[i].user.username;
 		}
 	}
 	console.log(Tnames);
 	return Tnames;
 }
-
+// return the array of names for CTside based on the original array from voicechat (bowl)
 function getRandomCTNames(bowl, assignments){
 	let CTnames = [];
 	console.log(bowl+'is bowl');
 	for (i = 0; i<bowl.length; i++) {
 		if(assignments[i].ctside) {
-			console.log(bowl[i].user.username+' is CT side.');
+			console.log(bowl[i].user.username+' is CT.');
 			CTnames[i] = bowl[i].user.username;
 		}
 	}
@@ -201,7 +197,14 @@ function rollFilteredMap(mode) {
 function rollReply(rollInteraction) {
 	const interaction = rollInteraction;
 	const roll = randomInt(interaction.options.getInteger('minval'), interaction.options.getInteger('maxval'));
-	return [interaction.member.nickname, 'rolled', roll.toString()+'.', '('+interaction.options.getInteger('minval'), '-', interaction.options.getInteger('maxval')+')'].join(' ')
+	return (bold(blockQuote([
+		interaction.member.nickname,
+		'rolls', 
+		roll.toString()+'.',
+		'('+interaction.options.getInteger('minval'),
+		'out of',
+		interaction.options.getInteger('maxval')+')'
+	].join(' '))));
 }
 
 // When the client is ready, run this code (only once) telling the console the bot is ready
@@ -211,7 +214,7 @@ let randomTNames = [];
 let randomCTNames = [];
 
 client.on('interactionCreate', async interaction => {
-	console.log(interaction.member.voice.channel.members instanceof Map);
+	let channelId = interaction.member.voice.channelId;
 	if (Boolean(interaction.options["_hoistedOptions"][0])) {
 		console.log('options is true')
 	}
@@ -223,25 +226,6 @@ client.on('interactionCreate', async interaction => {
 	}
 	if (interaction.options.getInteger('minval') === 0) {
 		await interaction.reply({ content: 'minval cannot be zero, snitch. Stop trying to break the bot! :rage:'})
-	}
-	if ((interaction.member.voice.channel.members).size <= 1)
-	{
-		await interaction.reply({ content: 'Channel has too few players!'});
-	}
-	if (interaction.commandName === 'randomteams' && (interaction.member.voice.channel.members).size >= 2) {
-		const bowl = randomTeams(interaction);
-		console.log('bowlsize is '+bowl.length);
-		const assignments = getRandomTeamAssignments(bowl);
-		console.log('bowlsize is '+bowl.length);
-		randomTNames = getRandomTNames(bowl, assignments);
-		randomCTNames = getRandomCTNames(bowl, assignments);
-		randomTreply = randomTNames.map(username => {
-			return username+' is T side. \r\n';
-		});
-		randomCTreply = randomCTNames.map(username => {
-			return username+' is CT side.\r\n'
-		})
-		await interaction.reply({ content: blockQuote(randomTreply+' and '+randomCTreply) });
 	}
 	if (interaction.commandName === 'randommap') {
 		await interaction.reply({ content: randomMapReply('ranked')})
@@ -266,6 +250,25 @@ client.on('interactionCreate', async interaction => {
 	}
 	if (interaction.options["_hoistedOptions"][0] === 'wingman') {
 		await interaction.reply({ content: randomMapReply('wingman') });
+	}
+	if (interaction.commandName === 'randomteams' && ((interaction.member.voice.channel.members).size <= 1))
+	{
+		await interaction.reply({ content: 'Channel has too few players!'});
+	}
+	if (interaction.commandName === 'randomteams' && (interaction.member.voice.channel.members).size >= 2) {
+		const bowl = randomTeams(interaction, channelId);
+		console.log('bowlsize is '+bowl.length);
+		const assignments = getRandomTeamAssignments(bowl);
+		console.log('bowlsize is '+bowl.length);
+		randomTNames = getRandomTNames(bowl, assignments);
+		randomCTNames = getRandomCTNames(bowl, assignments);
+		randomTreply = randomTNames.map(username => {
+			return username+' is T';
+		});
+		randomCTreply = randomCTNames.map(username => {
+			return username+' is CT.\r\n'
+		})
+		await interaction.reply({ content: blockQuote(randomTreply.join('\r\n')+'\r\n'+randomCTreply.join('\r\n')) });
 	}
 });
 	
