@@ -99,7 +99,10 @@ function randomMapReply(select) {
 }
 
 function randomTeams(randomTeamsInteraction, channelId) {
-	const channelFrom = randomTeamsInteraction.member.channels.cache.get(channelId);
+	// console.log(randomTeamsInteraction);
+	console.log(channelId);
+	const channelFrom = randomTeamsInteraction.guild.channels.cache.get(channelId)
+	// let channel = randomTeamsInteraction.guild.channels.cache.get('1030907869677232271')
 	if (!randomTeamsInteraction.member.permissions.has('MOVE_MEMBERS')) return
 	let bowl = [];
 	for (let guildMember of channelFrom.members.values()) {
@@ -119,13 +122,13 @@ function getRandomTeamAssignments(bowl){
 		let oddLength = ((originalBowlSize / 2) + 0.5);
 		console.log('oddLength is true');
 		for (i = 0; i < oddLength; i++){
-			assignments[i].push({
+			assignments[i] = ({
 				tside: true,
 				ctside: false
 			})
 		}
-		for (j = (oddLength - 1); j < originalBowlSize; j++) {
-			assignments[j].push({
+		for (j = oddLength; j < originalBowlSize; j++) {
+			assignments[j] = ({
 				tside: false,
 				ctside: true
 			})
@@ -154,11 +157,11 @@ function getRandomTeamAssignments(bowl){
 // return the array of names for Tside based on the original array from voicechat (bowl)
 function getRandomTNames(bowl, assignments){
 	let Tnames = [];
-	console.log(bowl+'is bowl')
 	for (i = 0; i<bowl.length; i++) {
 		if(assignments[i].tside) {
+			console.log(i);
 			console.log(bowl[i].user.username+' is T.');
-			Tnames[i] = bowl[i].user.username;
+			Tnames.push(bowl[i].user.username);
 		}
 	}
 	console.log(Tnames);
@@ -167,11 +170,11 @@ function getRandomTNames(bowl, assignments){
 // return the array of names for CTside based on the original array from voicechat (bowl)
 function getRandomCTNames(bowl, assignments){
 	let CTnames = [];
-	console.log(bowl+'is bowl');
 	for (i = 0; i<bowl.length; i++) {
 		if(assignments[i].ctside) {
+			console.log(i);
 			console.log(bowl[i].user.username+' is CT.');
-			CTnames[i] = bowl[i].user.username;
+			CTnames.push(bowl[i].user.username);
 		}
 	}
 	console.log(CTnames);
@@ -266,9 +269,9 @@ client.on('interactionCreate', async interaction => {
 			return username+' is T';
 		});
 		randomCTreply = randomCTNames.map(username => {
-			return username+' is CT.\r\n'
+			return username+' is CT'
 		})
-		await interaction.reply({ content: blockQuote(randomTreply.join('\r\n')+'\r\n'+randomCTreply.join('\r\n')) });
+		await interaction.reply({ content: blockQuote(bold(randomTreply.join('\r\n')+'\r\n\r\n'+randomCTreply.join('\r\n'))) });
 	}
 });
 	
