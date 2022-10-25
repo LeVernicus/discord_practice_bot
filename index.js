@@ -1,5 +1,7 @@
 // Require the necessary discord.js classes
-const { Client, GatewayIntentBits, bold, italic, strikethrough, underscore, spoiler, quote, blockQuote, Routes, VoiceChannel, GuildChannel, GuildMember, Base, Guild, CachedManager, DataManager, VoiceState, VoiceStateManager, GuildManager } = require('discord.js');
+const fs = require('node:fs');
+const path = require('node:path');
+const { Client, GatewayIntentBits, Collection, Events, bold, italic, strikethrough, underscore, spoiler, quote, blockQuote, Routes, VoiceChannel, GuildChannel, GuildMember, Base, Guild, CachedManager, DataManager, VoiceState, VoiceStateManager, GuildManager } = require('discord.js');
 const { REST } = require('@discordjs/rest');
 require('dotenv').config();
 const rest = new REST({ version: '10' }).setToken(process.env.token);
@@ -18,6 +20,22 @@ const client = new Client({
 		GatewayIntentBits.MessageContent
 	],
 });
+
+client.commands = new Collection();
+
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+	const filePath = path.join(commandsPath, file);
+	const command = require(filePath);
+	// Set a new item in the Collection with the key as the command name and the value as the exported module
+	if ('data' in command && 'execute' in command) {
+		client.commands.set(command.data.name, command);
+	} else {
+		console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+	}
+}
 
 // const guild = await interaction.client.guilds.fetch(process.env.guildId);
 
@@ -217,6 +235,8 @@ let randomTNames = [];
 let randomCTNames = [];
 
 client.on('interactionCreate', async interaction => {
+	if (!interaction.isChatInputCommand()) return;
+	console.log(interaction)
 	let channelId = interaction.member.voice.channelId;
 	if (Boolean(interaction.options["_hoistedOptions"][0])) {
 		console.log('options is true')
@@ -230,10 +250,10 @@ client.on('interactionCreate', async interaction => {
 	if (interaction.options.getInteger('minval') === 0) {
 		await interaction.reply({ content: 'minval cannot be zero, snitch. Stop trying to break the bot! :rage:'})
 	}
-	if (interaction.commandName === 'randommap') {
+	if (interaction.options["_hoistedOptions"][0] === 'ranked') {
 		await interaction.reply({ content: randomMapReply('ranked')})
 	}
-	if (interaction.options["_hoistedOptions"][0] === 'armsRace') {
+	if (interaction.options["_hoistedOptions"][0] === 'armsrace') {
 		await interaction.reply({ content: randomMapReply('armsRace') });
 	}
 	if (interaction.options["_hoistedOptions"][0] === 'casual') {
@@ -245,7 +265,7 @@ client.on('interactionCreate', async interaction => {
 	if (interaction.options["_hoistedOptions"][0] === 'deathmatch') {
 		await interaction.reply({ content: randomMapReply('deathmatch') });
 	}
-	if (interaction.options["_hoistedOptions"][0] === 'flyingScoutsman') {
+	if (interaction.options["_hoistedOptions"][0] === 'flyingscoutsman') {
 		await interaction.reply({ content: randomMapReply('flyingScoutsman') });
 	}
 	if (interaction.options["_hoistedOptions"][0] === 'retakes') {
@@ -274,5 +294,7 @@ client.on('interactionCreate', async interaction => {
 		await interaction.reply({ content: blockQuote(bold(randomTreply.join('\r\n')+'\r\n\r\n'+randomCTreply.join('\r\n'))) });
 	}
 });
+
+
 	
 client.login(process.env.token);
