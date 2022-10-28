@@ -26,6 +26,10 @@ module.exports = {
 				.setDescription('filters maps by Flying Scoutsman'))
 		.addSubcommand(subcommand =>
 			subcommand
+				.setName('ranked')
+				.setDescription('filters maps by Ranked'))
+		.addSubcommand(subcommand =>
+			subcommand
 				.setName('retakes')
 				.setDescription('filters maps by Retakes'))
 		.addSubcommand(subcommand =>

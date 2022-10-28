@@ -250,6 +250,7 @@ client.on('interactionCreate', async interaction => {
 	if (interaction.options.getInteger('minval') === 0) {
 		await interaction.reply({ content: 'minval cannot be zero, snitch. Stop trying to break the bot! :rage:'})
 	}
+	console.log(interaction.options)
 	if (interaction.options["_hoistedOptions"][0] === 'ranked') {
 		await interaction.reply({ content: randomMapReply('ranked')})
 	}
@@ -295,6 +296,4 @@ client.on('interactionCreate', async interaction => {
 	}
 });
 
-
-	
 client.login(process.env.token);
