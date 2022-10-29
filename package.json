@@ -1,6 +1,7 @@
 {
   "name": "bot-seattle",
   "description": "test bot for Discord",
+  "author": "zackbaum90@gmail.com",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
