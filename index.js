@@ -236,7 +236,6 @@ let randomCTNames = [];
 
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isChatInputCommand()) return;
-	console.log(interaction)
 	let channelId = interaction.member.voice.channelId;
 	if (Boolean(interaction.options["_hoistedOptions"][0])) {
 		console.log('options is true')
@@ -250,7 +249,6 @@ client.on('interactionCreate', async interaction => {
 	if (interaction.options.getInteger('minval') === 0) {
 		await interaction.reply({ content: 'minval cannot be zero, snitch. Stop trying to break the bot! :rage:'})
 	}
-	console.log(interaction.options)
 	if (interaction.options["_hoistedOptions"][0] === 'ranked') {
 		await interaction.reply({ content: randomMapReply('ranked')})
 	}
