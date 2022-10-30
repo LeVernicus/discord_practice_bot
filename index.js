@@ -5,8 +5,8 @@ const { Client, GatewayIntentBits, Collection, Events, bold, italic, strikethrou
 const { REST } = require('@discordjs/rest');
 require('dotenv').config();
 const rest = new REST({ version: '10' }).setToken(process.env.token);
-const maps = require('./maps.json');
 const commands = require('./commands.json');
+// const maps = require('./maps.json');
 // const botlines = require ('.botlines.json');
 // Create a new client instance
 const client = new Client({
@@ -116,88 +116,88 @@ function randomMapReply(select) {
 	}
 }
 
-function randomTeams(randomTeamsInteraction, channelId) {
-	// console.log(randomTeamsInteraction);
-	console.log(channelId);
-	const channelFrom = randomTeamsInteraction.guild.channels.cache.get(channelId)
-	// let channel = randomTeamsInteraction.guild.channels.cache.get('1030907869677232271')
-	if (!randomTeamsInteraction.member.permissions.has('MOVE_MEMBERS')) return
-	let bowl = [];
-	for (let guildMember of channelFrom.members.values()) {
-		bowl.push(guildMember);
-	}
-	bowl = shuffle(bowl);
-	console.log(bowl[0].user.username);
-	return bowl;
-}
+// function randomTeams(randomTeamsInteraction, channelId) {
+// 	// console.log(randomTeamsInteraction);
+// 	console.log(channelId);
+// 	const channelFrom = randomTeamsInteraction.guild.channels.cache.get(channelId)
+// 	// let channel = randomTeamsInteraction.guild.channels.cache.get('1030907869677232271')
+// 	if (!randomTeamsInteraction.member.permissions.has('MOVE_MEMBERS')) return
+// 	let bowl = [];
+// 	for (let guildMember of channelFrom.members.values()) {
+// 		bowl.push(guildMember);
+// 	}
+// 	bowl = shuffle(bowl);
+// 	console.log(bowl[0].user.username);
+// 	return bowl;
+// }
 
-function getRandomTeamAssignments(bowl){
-	originalBowlSize = bowl.length;
-	let assignments = [];
-	// Generate assignment objects based on size (bowl) of the channel participants
-	// If voicechannel size is not an even number of participants return extra player on T side
-	if ((originalBowlSize % 2) != 0) {
-		let oddLength = ((originalBowlSize / 2) + 0.5);
-		console.log('oddLength is true');
-		for (i = 0; i < oddLength; i++){
-			assignments[i] = ({
-				tside: true,
-				ctside: false
-			})
-		}
-		for (j = oddLength; j < originalBowlSize; j++) {
-			assignments[j] = ({
-				tside: false,
-				ctside: true
-			})
-		}
-	}
-	// If voicechannel is even size then assign even number of participants to ctside or tside
-	if ((originalBowlSize % 2) == 0) {
-		let evenLength = (originalBowlSize / 2);
-		console.log('evenlength is true');
-		for (i = 0; i < evenLength; i++){
-			assignments[i] = {
-				tside: true,
-				ctside: false
-			}
-		}
-		for (j = evenLength; j < originalBowlSize; j++) {
-			assignments[j] = {
-				tside: false,
-				ctside: true
-			}
-		}
-	}
-	console.log(assignments);
-	return assignments;
-}
-// return the array of names for Tside based on the original array from voicechat (bowl)
-function getRandomTNames(bowl, assignments){
-	let Tnames = [];
-	for (i = 0; i<bowl.length; i++) {
-		if(assignments[i].tside) {
-			console.log(i);
-			console.log(bowl[i].user.username+' is T.');
-			Tnames.push(bowl[i].user.username);
-		}
-	}
-	console.log(Tnames);
-	return Tnames;
-}
-// return the array of names for CTside based on the original array from voicechat (bowl)
-function getRandomCTNames(bowl, assignments){
-	let CTnames = [];
-	for (i = 0; i<bowl.length; i++) {
-		if(assignments[i].ctside) {
-			console.log(i);
-			console.log(bowl[i].user.username+' is CT.');
-			CTnames.push(bowl[i].user.username);
-		}
-	}
-	console.log(CTnames);
-	return CTnames;
-}
+// function getRandomTeamAssignments(bowl){
+// 	originalBowlSize = bowl.length;
+// 	let assignments = [];
+// 	// Generate assignment objects based on size (bowl) of the channel participants
+// 	// If voicechannel size is not an even number of participants return extra player on T side
+// 	if ((originalBowlSize % 2) != 0) {
+// 		let oddLength = ((originalBowlSize / 2) + 0.5);
+// 		console.log('oddLength is true');
+// 		for (i = 0; i < oddLength; i++){
+// 			assignments[i] = ({
+// 				tside: true,
+// 				ctside: false
+// 			})
+// 		}
+// 		for (j = oddLength; j < originalBowlSize; j++) {
+// 			assignments[j] = ({
+// 				tside: false,
+// 				ctside: true
+// 			})
+// 		}
+// 	}
+// 	// If voicechannel is even size then assign even number of participants to ctside or tside
+// 	if ((originalBowlSize % 2) == 0) {
+// 		let evenLength = (originalBowlSize / 2);
+// 		console.log('evenlength is true');
+// 		for (i = 0; i < evenLength; i++){
+// 			assignments[i] = {
+// 				tside: true,
+// 				ctside: false
+// 			}
+// 		}
+// 		for (j = evenLength; j < originalBowlSize; j++) {
+// 			assignments[j] = {
+// 				tside: false,
+// 				ctside: true
+// 			}
+// 		}
+// 	}
+// 	console.log(assignments);
+// 	return assignments;
+// }
+// // return the array of names for Tside based on the original array from voicechat (bowl)
+// function getRandomTNames(bowl, assignments){
+// 	let Tnames = [];
+// 	for (i = 0; i<bowl.length; i++) {
+// 		if(assignments[i].tside) {
+// 			console.log(i);
+// 			console.log(bowl[i].user.username+' is T.');
+// 			Tnames.push(bowl[i].user.username);
+// 		}
+// 	}
+// 	console.log(Tnames);
+// 	return Tnames;
+// }
+// // return the array of names for CTside based on the original array from voicechat (bowl)
+// function getRandomCTNames(bowl, assignments){
+// 	let CTnames = [];
+// 	for (i = 0; i<bowl.length; i++) {
+// 		if(assignments[i].ctside) {
+// 			console.log(i);
+// 			console.log(bowl[i].user.username+' is CT.');
+// 			CTnames.push(bowl[i].user.username);
+// 		}
+// 	}
+// 	console.log(CTnames);
+// 	return CTnames;
+// }
 
 function rollFilteredMap(mode) {
 	let j = [];
@@ -231,67 +231,61 @@ function rollReply(rollInteraction) {
 // When the client is ready, run this code (only once) telling the console the bot is ready
 client.once('ready', () => console.log(`${client.user.tag} is ready!`));
 
-let randomTNames = [];
-let randomCTNames = [];
-
-client.on('interactionCreate', async interaction => {
+client.on(Events.InteractionCreate, async interaction => {
 	if (!interaction.isChatInputCommand()) return;
-	let channelId = interaction.member.voice.channelId;
-	if (Boolean(interaction.options["_hoistedOptions"][0])) {
-		console.log('options is true')
+
+	const command = client.commands.get(interaction.commandName);
+
+	if (!command) return;
+
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 	}
-	if (!(Boolean(interaction.options["_hoistedOptions"][0]))) {
-		console.log('options is false')
-	}
-	if (interaction.commandName === 'roll' && interaction.options.getInteger('minval') !== 0) {
-		await interaction.reply({ content: rollReply(interaction) });
-	}
-	if (interaction.options.getInteger('minval') === 0) {
-		await interaction.reply({ content: 'minval cannot be zero, snitch. Stop trying to break the bot! :rage:'})
-	}
-	if (interaction.options["_hoistedOptions"][0] === 'ranked') {
-		await interaction.reply({ content: randomMapReply('ranked')})
-	}
-	if (interaction.options["_hoistedOptions"][0] === 'armsrace') {
-		await interaction.reply({ content: randomMapReply('armsRace') });
-	}
-	if (interaction.options["_hoistedOptions"][0] === 'casual') {
-		await interaction.reply({ content: randomMapReply('casual') });
-	}
-	if (interaction.options["_hoistedOptions"][0] === 'competitive') {
-		await interaction.reply({ content: randomMapReply('competitive') });
-	}
-	if (interaction.options["_hoistedOptions"][0] === 'deathmatch') {
-		await interaction.reply({ content: randomMapReply('deathmatch') });
-	}
-	if (interaction.options["_hoistedOptions"][0] === 'flyingscoutsman') {
-		await interaction.reply({ content: randomMapReply('flyingScoutsman') });
-	}
-	if (interaction.options["_hoistedOptions"][0] === 'retakes') {
-		await interaction.reply({ content: randomMapReply('retakes') });
-	}
-	if (interaction.options["_hoistedOptions"][0] === 'wingman') {
-		await interaction.reply({ content: randomMapReply('wingman') });
-	}
-	if (interaction.commandName === 'randomteams' && ((interaction.member.voice.channel.members).size <= 1))
-	{
-		await interaction.reply({ content: 'Channel has too few players!'});
-	}
-	if (interaction.commandName === 'randomteams' && (interaction.member.voice.channel.members).size >= 2) {
-		const bowl = randomTeams(interaction, channelId);
-		console.log('bowlsize is '+bowl.length);
-		const assignments = getRandomTeamAssignments(bowl);
-		console.log('bowlsize is '+bowl.length);
-		randomTNames = getRandomTNames(bowl, assignments);
-		randomCTNames = getRandomCTNames(bowl, assignments);
-		randomTreply = randomTNames.map(username => {
-			return username+' is T';
-		});
-		randomCTreply = randomCTNames.map(username => {
-			return username+' is CT'
-		})
-		await interaction.reply({ content: blockQuote(bold(randomTreply.join('\r\n')+'\r\n\r\n'+randomCTreply.join('\r\n'))) });
-	}
+	// let channelId = interaction.member.voice.channelId;
+	// if (Boolean(interaction.options["_hoistedOptions"][0])) {
+	// 	console.log('options is true')
+	// }
+	// if (!(Boolean(interaction.options["_hoistedOptions"][0]))) {
+	// 	console.log('options is false')
+	// }
+	// if (interaction.commandName === 'roll' && interaction.options.getInteger('minval') !== 0) {
+	// await interaction.reply({ content: rollReply(interaction) });
+	// }
+	// if (interaction.options.getInteger('minval') === 0) {
+	// 	await interaction.reply({ content: 'minval cannot be zero, snitch. Stop trying to break the bot! :rage:'})
+	// }
+	// if (interaction.options["_hoistedOptions"][0] === 'ranked') {
+	// 	await interaction.reply({ content: randomMapReply('ranked')})
+	// }
+	// if (interaction.options["_hoistedOptions"][0] === 'armsrace') {
+	// 	await interaction.reply({ content: randomMapReply('armsRace') });
+	// }
+	// if (interaction.options["_hoistedOptions"][0] === 'casual') {
+	// 	await interaction.reply({ content: randomMapReply('casual') });
+	// }
+	// if (interaction.options["_hoistedOptions"][0] === 'competitive') {
+	// 	await interaction.reply({ content: randomMapReply('competitive') });
+	// }
+	// if (interaction.options["_hoistedOptions"][0] === 'deathmatch') {
+	// 	await interaction.reply({ content: randomMapReply('deathmatch') });
+	// }
+	// if (interaction.options["_hoistedOptions"][0] === 'flyingscoutsman') {
+	// 	await interaction.reply({ content: randomMapReply('flyingScoutsman') });
+	// }
+	// if (interaction.options["_hoistedOptions"][0] === 'retakes') {
+	// 	await interaction.reply({ content: randomMapReply('retakes') });
+	// }
+	// if (interaction.options["_hoistedOptions"][0] === 'wingman') {
+	// 	await interaction.reply({ content: randomMapReply('wingman') });
+	// }
+	// if (interaction.commandName === 'randomteams' && ((interaction.member.voice.channel.members).size <= 1))
+	// {
+	// 	await interaction.reply({ content: 'Channel has too few players!'});
+	// }
+
 });
 
 client.login(process.env.token);
