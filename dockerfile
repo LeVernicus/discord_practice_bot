@@ -1,11 +1,15 @@
-FROM node:latest
+FROM ubuntu:22.04
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
+ADD --keep-git-dir=true https://github.com/LeVernicus/discord_practice_bot.git /buildkit
 
-COPY . .
-
-RUN npm install
+RUN npm install discord.js
+RUN npm install dotenv
 
 CMD [ "node", "index.js" ]
+
+EXPOSE 80/TCP
+EXPOSE 80/UDP
+EXPOSE 443/TCP
+EXPOSE 443/UDP
